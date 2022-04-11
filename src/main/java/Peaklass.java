@@ -7,13 +7,15 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 class Peaklass {
+    private static final String filepath = "C:\\Users\\priid\\OneDrive\\ati comp laenutus\\";
+
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
 
         //KUI UUENDADA KLASSE VÕI INVENTARI FAILI, SIIS PEAB SELLE UUESTI TEGEMA
         //Inventar inventar = loeInventarCSV("G:\\Shared drives\\LTAT - ati.comp\\inventar.csv");
 
-        Inventar inventar = loeInventarXLSX("C:\\Users\\priid\\OneDrive\\inventar.xlsx");
+        Inventar inventar = loeInventarXLSX(filepath + "inventar.xlsx");
 
         //Inventar inventar = loeInventarTXT("file.txt");
 
@@ -84,7 +86,9 @@ class Peaklass {
         return new Inventar(failinimi);
     }
 
-    static Inventar loeInventarXLSX(String failinimi) throws IOException {return new Inventar(failinimi);}
+    static Inventar loeInventarXLSX(String failinimi) throws IOException {
+        return new Inventar(failinimi);
+    }
 
     static Inventar loeInventarTXT(String failinimi) throws IOException, ClassNotFoundException {
         FileInputStream fileStream = null;
@@ -139,13 +143,13 @@ class Peaklass {
         System.out.println("Sisesta lõppkuupäev: ");
         String[] kuupäev = triipkoodiLugeja.nextLine().split("/");
 
-            LocalDate dateLaenutus = LocalDate.of(Integer.parseInt(kuupäev[2]), Integer.parseInt(kuupäev[1]), Integer.parseInt(kuupäev[0]));
-            Laenutus uusLaenutus = new Laenutus(laenutaja, tehnika, LocalDate.now(), dateLaenutus);
-            laenutaja.lisaLaenutus(uusLaenutus);
-            tehnika.lisaLaenutus(uusLaenutus);
-            inventar.lisaLaenutaja(laenutaja);
-            //kirjutaLaenutusFaili(uusLaenutus, "resources\\laenutused.csv");
-            kirjutaLaenutusCloudi(uusLaenutus, "C:\\Users\\priid\\OneDrive\\laenutused.xlsx");
+        LocalDate dateLaenutus = LocalDate.of(Integer.parseInt(kuupäev[2]), Integer.parseInt(kuupäev[1]), Integer.parseInt(kuupäev[0]));
+        Laenutus uusLaenutus = new Laenutus(laenutaja, tehnika, LocalDate.now(), dateLaenutus);
+        laenutaja.lisaLaenutus(uusLaenutus);
+        tehnika.lisaLaenutus(uusLaenutus);
+        inventar.lisaLaenutaja(laenutaja);
+        //kirjutaLaenutusFaili(uusLaenutus, "resources\\laenutused.csv");
+        kirjutaLaenutusCloudi(uusLaenutus, filepath + "laenutused.xlsx");
 
     }
 
@@ -168,7 +172,7 @@ class Peaklass {
         System.out.println("Sisesta laenutaja, kelle andmeid tahad (isikukood): ");
         String isikukood = triipkoodiLugeja.nextLine();
         Laenutaja laenutaja = otsiLaenutajat(isikukood, inventar);
-        if(laenutaja!=null) {
+        if (laenutaja != null) {
             System.out.println(laenutaja.getLaenutused());
         }
     }
@@ -188,7 +192,7 @@ class Peaklass {
             String[] data1 = {tehnika.getKirjeldus(), laenutaja.getEesnimi() + " " + laenutaja.getPerenimi(), laenutus.getAlgus().toString(), laenutus.getLopp().toString()};
             writer.writeNext(data1);
             writer.close();
-        }  catch (IOException e) {
+        } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -198,7 +202,7 @@ class Peaklass {
         File fail = new File(failinimi);
         Tehnika toode = laenutus.getTehnika();
         Laenutaja laenutaja = laenutus.getLaenutaja();
-        Object[] laenutuseInfo = {toode.getKirjeldus(), laenutaja.getEesnimi()+" "+laenutaja.getPerenimi(), laenutus.getAlgus(), laenutus.getLopp()};
+        Object[] laenutuseInfo = {toode.getKirjeldus(), laenutaja.getEesnimi() + " " + laenutaja.getPerenimi(), laenutus.getAlgus(), laenutus.getLopp()};
 
         try {
             FileInputStream inputStream = new FileInputStream(fail);
@@ -211,15 +215,15 @@ class Peaklass {
             int tulp = 0;
             for (Object info : laenutuseInfo) {
                 Cell kast = rida.createCell(tulp++);
-                if(info instanceof String) kast.setCellValue((String) info);
-                else if(info instanceof LocalDate) {
-                    kast.setCellValue( info.toString());
+                if (info instanceof String) kast.setCellValue((String) info);
+                else if (info instanceof LocalDate) {
+                    kast.setCellValue(info.toString());
                 }
             }
             inputStream.close();
 
 
-            FileOutputStream out = new FileOutputStream("C:\\Users\\priid\\OneDrive\\laenutused.xlsx");
+            FileOutputStream out = new FileOutputStream(failinimi);
             workbook.write(out);
 
             workbook.close();
