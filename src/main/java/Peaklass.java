@@ -21,7 +21,7 @@ class Peaklass {
 
         Scanner triipkoodiLugeja = new Scanner(System.in);
         while (true) {
-            kontrolliTehnikaAjalugu(triipkoodiLugeja, inventar);
+            //kontrolliTehnikaAjalugu(triipkoodiLugeja, inventar);
 
             teostaLaenutus(triipkoodiLugeja, inventar);
 
