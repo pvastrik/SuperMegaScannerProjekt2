@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/src/main/java/Inventar.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/main/java/Laenutaja.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/main/java/Laenutus.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/main/java/Peaklass.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/src/main/java/Inventar.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/Laenutaja.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/Laenutus.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/Peaklass.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/README.md" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/main/java/Tehnika.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/main/java/Triipkood.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/src/main/java/Tehnika.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/Triipkood.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/file.txt" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/src/main/java/inventar.csv" charset="windows-1252" />
     <file url="PROJECT" charset="UTF-8" />

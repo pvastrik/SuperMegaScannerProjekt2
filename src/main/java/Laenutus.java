@@ -1,5 +1,10 @@
-import java.io.Serializable;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.ss.usermodel.*;
+
+import java.io.*;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collections;
 
 class Laenutus implements Serializable {
     private Laenutaja laenutaja;
@@ -8,6 +13,7 @@ class Laenutus implements Serializable {
     private LocalDate lopp;
     private LocalDate lopetatud;
     private String markused;
+    private int kohtFailis;
 
     Laenutus(Laenutaja laenutaja, Tehnika tehnika, LocalDate algus, LocalDate lopp) {
         this.laenutaja = laenutaja;
@@ -32,6 +38,10 @@ class Laenutus implements Serializable {
         return lopp;
     }
 
+    int getKohtFailis() {
+        return kohtFailis;
+    }
+
     LocalDate getLopetatud() {
         return lopetatud;
     }
@@ -42,6 +52,10 @@ class Laenutus implements Serializable {
 
     void setLopetatud(LocalDate lopetatud) {
         this.lopetatud = lopetatud;
+    }
+
+    void setKohtFailis(int kohtFailis) {
+        this.kohtFailis = kohtFailis;
     }
 
     void setMarkused(String markused) {
