@@ -1,13 +1,9 @@
-import com.opencsv.CSVWriter;
-import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.ss.usermodel.*;
-
-import java.io.*;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Scanner;
 
 class Peaklass {
-    private static final String filepath = "C:\\Users\\priid\\OneDrive\\ati comp laenutus\\";
+    private static final String filepath = "C:\\Users\\mihkel\\OneDrive\\ati comp laenutus\\";
     //Inventar inventar = loeInventarCSV("G:\\Shared drives\\LTAT - ati.comp\\inventar.csv");
 
     //KUI UUENDADA KLASSE VÕI INVENTARI FAILI, SIIS PEAB SELLE UUESTI TEGEMA
@@ -23,14 +19,13 @@ class Peaklass {
     }
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
-
-
+        gui.alge();
 
         Scanner triipkoodiLugeja = new Scanner(System.in);
         while (true) {
             //kontrolliTehnikaAjalugu(triipkoodiLugeja, inventar);
-            System.out.print("Skänneeri kood: ");
             String inputKood = triipkoodiLugeja.nextLine();
+            gui.lisaNupud();
             Tehnika skännitudEse = inventar.getTehnika(new Triipkood(inputKood));
             if (skännitudEse.kasOlemas()) teostaLaenutus(triipkoodiLugeja, skännitudEse);
             else skännitudEse.tagasta();

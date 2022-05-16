@@ -10,7 +10,7 @@ import java.util.*;
 
 class Failid {
 
-    private static final String filepath = "C:\\Users\\priid\\OneDrive\\ati comp laenutus\\";
+    private static final String filepath = "C:\\Users\\mihkel\\OneDrive\\ati comp laenutus\\";
 
     static List<Tehnika> looInventarCSV() throws Exception {
         List<Tehnika> koguVara = new ArrayList<>();
