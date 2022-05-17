@@ -42,13 +42,13 @@ class gui {
         //Label will be 150 (50*3) pixels wide, start at 0,0, and we'll add 30 pixels of padding below it.
         GridBagConstraints firstOperandConstraints = new GridBagConstraints(
                 3,1,
-                3,1,
+                6,2,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
                 new Insets(0, 0, 30, 0),
                 0, 0
         );
-        GridBagConstraints op1Constraints = new GridBagConstraints(
+        GridBagConstraints textfield = new GridBagConstraints(
                 3,2,
                 3,1,
                 1,1,
@@ -56,44 +56,44 @@ class gui {
                 new Insets(0, 0, 30, 0),
                 0, 0
         );
-        GridBagConstraints secondOperandConstraints = new GridBagConstraints(
+        GridBagConstraints buttonConstraints = new GridBagConstraints(
                 3,3,
                 3,1,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
-                new Insets(0, 0, 30, 0),
+                new Insets(0, 0, 10, 0),
                 0, 0
         );
-        GridBagConstraints op2Constraints = new GridBagConstraints(
+        GridBagConstraints button1Constraints = new GridBagConstraints(
                 3,4,
                 3,1,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
-                new Insets(0, 0, 30, 0),
+                new Insets(0, 0, 10, 0),
                 0, 0
         );
-        GridBagConstraints answerConstraints = new GridBagConstraints(
+        GridBagConstraints button3Constraints = new GridBagConstraints(
                 3,5,
                 3,1,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
-                new Insets(0, 0, 30, 0),
+                new Insets(0, 0, 10, 0),
                 0, 0
         );
-        GridBagConstraints ansConstraints = new GridBagConstraints(
+        GridBagConstraints button2Constraints = new GridBagConstraints(
                 3,6,
                 3,1,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
-                new Insets(0, 0, 30, 0),
+                new Insets(0, 0, 10, 0),
                 0, 0
         );
-        GridBagConstraints textfield = new GridBagConstraints(
-                3,6,
+        GridBagConstraints button4Constraints = new GridBagConstraints(
+                3,7,
                 3,1,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
-                new Insets(0, 0, 30, 0),
+                new Insets(0, 0, 10, 0),
                 0, 0
         );
 
@@ -107,13 +107,13 @@ class gui {
 
 
 
-        con.add(button, ansConstraints);
-        con.add(button1,textfield );
-        con.add(button2, secondOperandConstraints);
-        con.add(button3, op2Constraints);
-        con.add(button4, answerConstraints);
+        con.add(button, buttonConstraints);
+        con.add(button1,button1Constraints );
+        con.add(button2, button2Constraints);
+        con.add(button3, button3Constraints);
+        con.add(button4, button4Constraints);
         con.add(text, firstOperandConstraints);
-        con.add(jt, op1Constraints);
+        con.add(jt, textfield);
 
 
         Action action = new AbstractAction()
@@ -198,11 +198,11 @@ class gui {
         button2.setVisible(true);
         button3.setVisible(true);
         button4.setVisible(true);
-        button.setBounds(50,200,300,40);
-        button1.setBounds(50,250,300,40);
-        button2.setBounds(50,300,300,40);
-        button3.setBounds(50,350,300,40);
-        button4.setBounds(50,400,300,40);
+//        button.setBounds(50,200,300,40);
+//        button1.setBounds(50,250,300,40);
+//        button2.setBounds(50,300,300,40);
+//        button3.setBounds(50,350,300,40);
+//        button4.setBounds(50,400,300,40);
         jt.setVisible(false);
         text.setFont(new Font("Helvetica Neue", Font.PLAIN, 15));
         text.setText(String.format("<html>Tere %s!<br> Kauaks soovid laenutada?</html>", nimi));
