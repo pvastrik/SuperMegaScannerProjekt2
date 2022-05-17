@@ -10,7 +10,7 @@ import java.util.*;
 
 class Failid {
 
-    private static final String filepath = "C:\\Users\\mihkel\\OneDrive\\ati comp laenutus\\";
+    protected static final String filepath = "C:\\Users\\priid\\OneDrive\\ati comp laenutus\\";
 
     static List<Tehnika> looInventarCSV() throws Exception {
         List<Tehnika> koguVara = new ArrayList<>();
@@ -69,7 +69,7 @@ class Failid {
     static void kirjutaLaenutusCloudi(Laenutus laenutus) throws IOException {
         File fail = new File(filepath + "laenutused.xlsx");
 
-        Object[] laenutuseInfo = {laenutus.getTehnika().getKirjeldus(), laenutus.getLaenutaja().getEesnimi() + " " + laenutus.getLaenutaja().getPerenimi(),
+        Object[] laenutuseInfo = {laenutus.getTehnika().getKirjeldus(), laenutus.getTehnika().getTriipkood().toString(), laenutus.getLaenutaja().getEesnimi() + " " + laenutus.getLaenutaja().getPerenimi(),
                 laenutus.getAlgus(), laenutus.getLopp()};
 
         try {
@@ -85,7 +85,8 @@ class Failid {
                 Cell kast = rida.createCell(tulp++);
                 if (info instanceof String) kast.setCellValue((String) info);
                 else if (info instanceof LocalDate) {
-                    kast.setCellValue(formatKuupäev(info));
+                    if (info.equals(LocalDate.MAX)) kast.setCellValue("Pikemaks ajaks");
+                    else kast.setCellValue(formatKuupäev(info));
                 }
             }
             inputStream.close();

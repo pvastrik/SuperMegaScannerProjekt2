@@ -20,6 +20,8 @@ class Laenutus implements Serializable {
         this.tehnika = tehnika;
         this.algus = algus;
         this.lopp = lopp;
+        laenutaja.lisaLaenutus(this);
+        tehnika.lisaLaenutus(this);
     }
 
     Laenutaja getLaenutaja() {

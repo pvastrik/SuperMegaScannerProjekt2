@@ -1,14 +1,17 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
 class gui {
     public static final JFrame frame = new JFrame("Delta inventar");
-    public static JTextField text;
+    public static JLabel text = new JLabel();
     public static Button button;
     public static Button button1;
     public static Button button2;
@@ -17,6 +20,8 @@ class gui {
     public static GridBagLayout layout;
     public static JTextField jt = new JTextField();
     public static String tootekood;
+
+    static LaenutuseHandler laenutus = new LaenutuseHandler();
 
 
 
@@ -30,13 +35,9 @@ class gui {
         Arrays.fill(layout.columnWidths, 50);
         layout.rowHeights = new int[9];
         Arrays.fill(layout.rowHeights, 50);
-        text = new JTextField("scanni toode");
+        text.setText("scanni toode");
         text.setFont(new Font("Helvetica Neue", Font.PLAIN, 20));
-        text.setHighlighter(null);
-        text.setEditable( false );
-        text.getCaret().deinstall( text );
-        text.setBorder(null);
-        text.setBackground(null);
+
 
         //Label will be 150 (50*3) pixels wide, start at 0,0, and we'll add 30 pixels of padding below it.
         GridBagConstraints firstOperandConstraints = new GridBagConstraints(
@@ -98,21 +99,11 @@ class gui {
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
-        button = new Button("päevaks ("+ formatter.format(getDateIn(new Date(),1))+")");
-        button1 = new Button("nädalaks (" + formatter.format(getDateIn(new Date(), 7))+")");
-        button2 = new Button("semestriks (" + (new Date().getMonth() < 6 ? "30.06.2020)" : "20.12.2020)"));
-        button3= new Button("kuuks (" + formatter.format(getDateIn(new Date(), 30))+")");
-        button4 = new Button("igaveseks >:)" );
-        button.setBounds(50,100,300,20);
-        button1.setBounds(50,150,300,20);
-        button2.setBounds(50,200,300,20);
-        button3.setBounds(50,250,300,20);
-        button4.setBounds(50,300,300,20);
-        button.setVisible(false);
-        button1.setVisible(false);
-        button2.setVisible(false);
-        button3.setVisible(false);
-        button4.setVisible(false);
+        button = looAjaNupp("päevaks", 1);
+        button1 = looAjaNupp("nädalaks", 7);
+        button2 = semestriNupp();
+        button3= looAjaNupp("kuuks", 30);
+        button4 = looAjaNupp("igaveseks >:)", 0);
 
 
 
@@ -124,13 +115,15 @@ class gui {
         con.add(text, firstOperandConstraints);
         con.add(jt, op1Constraints);
 
+
         Action action = new AbstractAction()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
                 tootekood = jt.getText();
-                lisaNupud();
+                laenutus.setTehnika(Peaklass.inventar.getTehnika(new Triipkood(tootekood)));
+                tuvastaKasutaja();
             }
         };
 
@@ -142,16 +135,77 @@ class gui {
         frame.setVisible(true);
         frame.pack();
         frame.setResizable(false);
+
+        jt.requestFocusInWindow();
     }
 
-    public static void lisaNupud() {
+    private static void tuvastaKasutaja() {
+        text.setText("Valideeri kaart");
+        jt.setText("");
+        jt.removeActionListener(jt.getActionListeners()[0]);
+        jt.addActionListener(e -> {
+            String[] nimed = jt.getText().split(" ");
+            laenutus.setLaenutaja(new Laenutaja(nimed[0], nimed[1], "123"));
+            lisaNupud(jt.getText());
+        });
+    }
+    private static Button semestriNupp() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate praegu = LocalDate.now();
+        LocalDate kuupäev = praegu.getMonthValue() < 7 ? LocalDate.of(praegu.getYear(), 6, 30) : LocalDate.of(praegu.getYear(), 12, 20);
+        Button button = new Button(String.format("semestriks (%s)", formatter.format(kuupäev)));
+        lisaNupuTegevus(button, kuupäev);
+        button.setVisible(false);
+        return button;
+    }
+
+    private static Button looAjaNupp(String tekst, long kauaks) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate kuupäev = kauaks == 0 ? LocalDate.MAX : LocalDate.now().plusDays(kauaks);
+        Button button = kauaks == 0 ? new Button(tekst) : new Button(String.format("%s (%s)", tekst, formatter.format(kuupäev)));
+        lisaNupuTegevus(button, kuupäev);
+        button.setVisible(false);
+        return button;
+    }
+
+    private static void lisaNupuTegevus(Button button, LocalDate kuupäev) {
+        button.addActionListener( e -> {
+            laenutus.setKuupäev(kuupäev);
+            laenutus.setLaenutaja(new Laenutaja("Priidik", "Västrik", "1234"));
+            try {
+                Failid.kirjutaLaenutusCloudi(laenutus.looLaenutus());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            lõpetaLaenutus();
+        });
+    }
+
+    private static void lõpetaLaenutus() {
+        text.setText("Laenutus edukalt registreeritud");
+        button.setVisible(false);
+        button1.setVisible(false);
+        button2.setVisible(false);
+        button3.setVisible(false);
+        button4.setVisible(false);
+        text.setFont(new Font("Helvetica Neue", Font.PLAIN, 20));
+
+    }
+
+    public static void lisaNupud(String nimi) {
         button.setVisible(true);
         button1.setVisible(true);
         button2.setVisible(true);
         button3.setVisible(true);
         button4.setVisible(true);
+        button.setBounds(50,200,300,40);
+        button1.setBounds(50,250,300,40);
+        button2.setBounds(50,300,300,40);
+        button3.setBounds(50,350,300,40);
+        button4.setBounds(50,400,300,40);
         jt.setVisible(false);
-        text.setText("Palju tahad?");
+        text.setFont(new Font("Helvetica Neue", Font.PLAIN, 15));
+        text.setText(String.format("<html>Tere %s!<br> Kauaks soovid laenutada?</html>", nimi));
         System.out.println(tootekood);
     }
 

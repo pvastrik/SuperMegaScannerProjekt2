@@ -3,7 +3,7 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 class Peaklass {
-    private static final String filepath = "C:\\Users\\mihkel\\OneDrive\\ati comp laenutus\\";
+    private static final String filepath = Failid.filepath;
     //Inventar inventar = loeInventarCSV("G:\\Shared drives\\LTAT - ati.comp\\inventar.csv");
 
     //KUI UUENDADA KLASSE VÕI INVENTARI FAILI, SIIS PEAB SELLE UUESTI TEGEMA
@@ -24,11 +24,10 @@ class Peaklass {
         Scanner triipkoodiLugeja = new Scanner(System.in);
         while (true) {
             //kontrolliTehnikaAjalugu(triipkoodiLugeja, inventar);
-            String inputKood = triipkoodiLugeja.nextLine();
-            gui.lisaNupud();
-            Tehnika skännitudEse = inventar.getTehnika(new Triipkood(inputKood));
-            if (skännitudEse.kasOlemas()) teostaLaenutus(triipkoodiLugeja, skännitudEse);
-            else skännitudEse.tagasta();
+//            String inputKood = triipkoodiLugeja.nextLine();
+//            Tehnika skännitudEse = inventar.getTehnika(new Triipkood(inputKood));
+//            if (skännitudEse.kasOlemas()) teostaLaenutus(triipkoodiLugeja, skännitudEse);
+//            else skännitudEse.tagasta();
 
 
         }
@@ -50,8 +49,6 @@ class Peaklass {
 
         LocalDate dateLaenutus = LocalDate.of(Integer.parseInt(kuupäev[2]), Integer.parseInt(kuupäev[1]), Integer.parseInt(kuupäev[0]));
         Laenutus uusLaenutus = new Laenutus(laenutaja, tehnika, LocalDate.now(), dateLaenutus);
-        laenutaja.lisaLaenutus(uusLaenutus);
-        tehnika.lisaLaenutus(uusLaenutus);
         inventar.lisaLaenutaja(laenutaja);
         Failid.kirjutaLaenutusCloudi(uusLaenutus);
         Failid.salvestaObjektFaili(inventar);
