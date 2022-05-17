@@ -20,6 +20,7 @@ class gui {
     public static GridBagLayout layout;
     public static JTextField jt = new JTextField();
     public static String tootekood;
+    public static JLabel sonum = new JLabel();
 
     static LaenutuseHandler laenutus = new LaenutuseHandler();
 
@@ -28,20 +29,23 @@ class gui {
 
 
     public static void alge() {
+        Font  f4  = new Font(Font.MONOSPACED, Font.PLAIN, 20);
+        Font  f3  = new Font(Font.MONOSPACED, Font.PLAIN, 15);
+
         Container con = frame.getContentPane();
 
         con.setLayout(layout = new GridBagLayout());
-        layout.columnWidths = new int[9];
+        layout.columnWidths = new int[30];
         Arrays.fill(layout.columnWidths, 50);
-        layout.rowHeights = new int[9];
+        layout.rowHeights = new int[15];
         Arrays.fill(layout.rowHeights, 50);
         text.setText("scanni toode");
-        text.setFont(new Font("Helvetica Neue", Font.PLAIN, 20));
-
+        text.setFont(f4);
+        sonum.setFont(f3);
 
         //Label will be 150 (50*3) pixels wide, start at 0,0, and we'll add 30 pixels of padding below it.
-        GridBagConstraints firstOperandConstraints = new GridBagConstraints(
-                3,1,
+        GridBagConstraints textcon = new GridBagConstraints(
+                13,1,
                 6,2,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
@@ -49,7 +53,7 @@ class gui {
                 0, 0
         );
         GridBagConstraints textfield = new GridBagConstraints(
-                3,2,
+                13,2,
                 3,1,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
@@ -57,7 +61,7 @@ class gui {
                 0, 0
         );
         GridBagConstraints buttonConstraints = new GridBagConstraints(
-                3,3,
+                13,3,
                 3,1,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
@@ -65,7 +69,7 @@ class gui {
                 0, 0
         );
         GridBagConstraints button1Constraints = new GridBagConstraints(
-                3,4,
+                13,4,
                 3,1,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
@@ -73,7 +77,7 @@ class gui {
                 0, 0
         );
         GridBagConstraints button3Constraints = new GridBagConstraints(
-                3,5,
+                13,5,
                 3,1,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
@@ -81,7 +85,7 @@ class gui {
                 0, 0
         );
         GridBagConstraints button2Constraints = new GridBagConstraints(
-                3,6,
+                13,6,
                 3,1,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
@@ -89,8 +93,16 @@ class gui {
                 0, 0
         );
         GridBagConstraints button4Constraints = new GridBagConstraints(
-                3,7,
+                13,7,
                 3,1,
+                1,1,
+                GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
+                new Insets(0, 0, 10, 0),
+                0, 0
+        );
+        GridBagConstraints sonumcon = new GridBagConstraints(
+                12,3,
+                6,2,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
                 new Insets(0, 0, 10, 0),
@@ -106,14 +118,32 @@ class gui {
         button4 = looAjaNupp("igaveseks >:)", 0);
 
 
+        button.setBackground(new Color(59, 89, 182));
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Tahoma", Font.BOLD, 12));
+        button1.setBackground(new Color(59, 89, 182));
+        button1.setForeground(Color.WHITE);
+        button1.setFont(new Font("Tahoma", Font.BOLD, 12));
+        button2.setBackground(new Color(59, 89, 182));
+        button2.setForeground(Color.WHITE);
+        button2.setFont(new Font("Tahoma", Font.BOLD, 12));
+        button3.setBackground(new Color(59, 89, 182));
+        button3.setForeground(Color.WHITE);
+        button3.setFont(new Font("Tahoma", Font.BOLD, 12));
+        button4.setBackground(new Color(59, 89, 182));
+        button4.setForeground(Color.WHITE);
+        button4.setFont(new Font("Tahoma", Font.BOLD, 12));
+
+
 
         con.add(button, buttonConstraints);
         con.add(button1,button1Constraints );
         con.add(button2, button2Constraints);
         con.add(button3, button3Constraints);
         con.add(button4, button4Constraints);
-        con.add(text, firstOperandConstraints);
+        con.add(text, textcon);
         con.add(jt, textfield);
+        con.add(sonum, sonumcon);
 
 
         Action action = new AbstractAction()
@@ -122,24 +152,41 @@ class gui {
             public void actionPerformed(ActionEvent e)
             {
                 tootekood = jt.getText();
-                laenutus.setTehnika(Peaklass.inventar.getTehnika(new Triipkood(tootekood)));
-                tuvastaKasutaja();
+                Laenutus l = Peaklass.inventar.otsiLaenutust(tootekood);
+                if (l!= null) {
+                    eemaldaLaenutus(l);
+                } else {
+                    try {
+                        laenutus.setTehnika(Peaklass.inventar.getTehnika(new Triipkood(tootekood)));
+                        tuvastaKasutaja();
+                    } catch (Exception ex) {
+                        sonum.setText("sellise koodiga toodet ei ole olemas");
+                    }
+                }
             }
         };
 
         jt.addActionListener( action );
 
+        con.setBackground(Color.lightGray);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800,700);
-        frame.setVisible(true);
         frame.pack();
+        frame.setVisible(true);
         frame.setResizable(false);
+
+
 
         jt.requestFocusInWindow();
     }
 
+    private static void eemaldaLaenutus(Laenutus laenutus) {
+        sonum.setText("Laenutus eemaldatud");
+        Peaklass.inventar.eemaldaLaenutus(laenutus);
+    }
+
     private static void tuvastaKasutaja() {
+
         text.setText("Valideeri kaart");
         jt.setText("");
         jt.removeActionListener(jt.getActionListeners()[0]);
@@ -182,13 +229,16 @@ class gui {
     }
 
     private static void lõpetaLaenutus() {
-        text.setText("Laenutus edukalt registreeritud");
+        jt.setVisible(true);
         button.setVisible(false);
         button1.setVisible(false);
         button2.setVisible(false);
         button3.setVisible(false);
         button4.setVisible(false);
-        text.setFont(new Font("Helvetica Neue", Font.PLAIN, 20));
+        alge();
+        sonum.setText("laenutus edukalt registreeritud");
+
+//        text.setFont(new Font("Helvetica Neue", Font.PLAIN, 20));
 
     }
 
@@ -204,7 +254,6 @@ class gui {
 //        button3.setBounds(50,350,300,40);
 //        button4.setBounds(50,400,300,40);
         jt.setVisible(false);
-        text.setFont(new Font("Helvetica Neue", Font.PLAIN, 15));
         text.setText(String.format("<html>Tere %s!<br> Kauaks soovid laenutada?</html>", nimi));
         System.out.println(tootekood);
     }

@@ -50,6 +50,7 @@ class Peaklass {
         LocalDate dateLaenutus = LocalDate.of(Integer.parseInt(kuupäev[2]), Integer.parseInt(kuupäev[1]), Integer.parseInt(kuupäev[0]));
         Laenutus uusLaenutus = new Laenutus(laenutaja, tehnika, LocalDate.now(), dateLaenutus);
         inventar.lisaLaenutaja(laenutaja);
+        inventar.lisaLaenutus(uusLaenutus);
         Failid.kirjutaLaenutusCloudi(uusLaenutus);
         Failid.salvestaObjektFaili(inventar);
 

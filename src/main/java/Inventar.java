@@ -1,18 +1,12 @@
-import com.opencsv.CSVReader;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.io.*;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 class Inventar implements Serializable {
     private List<Tehnika> koguVara;
     private List<Laenutaja> laenutajad = new ArrayList<>();
-
+    private List<Laenutus> laenutused = new ArrayList<>();
 
     Inventar() throws Exception {
         koguVara = Failid.looInventarXLSX();
@@ -27,17 +21,36 @@ class Inventar implements Serializable {
         return null;
     }
 
+    Laenutus otsiLaenutust(String kood) {
+        for (Laenutus l : laenutused) {
+            if (Objects.equals(l.getTehnika().getTriipkood().getKood(), kood)) {
+                return l;
+            }
+        }
+        return null;
+    }
+
     public List<Laenutaja> getLaenutajad() {
         return laenutajad;
     }
 
-    void lisaLaenutaja(Laenutaja laenutaja) {
-        laenutajad.add(laenutaja);
-    }
+    void lisaLaenutaja(Laenutaja laenutaja) {laenutajad.add(laenutaja);}
+
+
+    void lisaLaenutus(Laenutus laenutus) { laenutused.add(laenutus); }
+
+    void eemaldaLaenutus(Laenutus laenutus) { laenutused.remove(laenutus);}
 
     Tehnika getTehnika(Triipkood triipkood) {
         for (Tehnika tehnika : koguVara) {
             if (triipkood.equals(tehnika.getTriipkood())) return tehnika;
+        }
+        throw new RuntimeException("Sellise koodiga tehnikat ei leitud.");
+    }
+
+    Tehnika getTehnika(String triipkood) {
+        for (Tehnika tehnika : koguVara) {
+            if (triipkood.equals(tehnika.getTriipkood().getKood())) return tehnika;
         }
         throw new RuntimeException("Sellise koodiga tehnikat ei leitud.");
     }
