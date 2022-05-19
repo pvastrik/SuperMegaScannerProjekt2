@@ -205,7 +205,7 @@ class gui {
             } else {
                 eesnimik = nimed[0];
             }
-            laenutus.setLaenutaja(new Laenutaja(eesnimik, nimed[1]));
+            laenutus.setLaenutaja(new Laenutaja(eesnimik, nimed[nimed.length-1]));
             lisaNupud(jt.getText());
             jt.setText("");
         });

@@ -9,19 +9,7 @@ import java.util.*;
 
 class Failid {
 
-    protected static final String filepath = "C:\\Users\\mihkel\\OneDrive\\ati comp laenutus\\";
-
-    static List<Tehnika> looInventarCSV() throws Exception {
-        List<Tehnika> koguVara = new ArrayList<>();
-        CSVReader reader = new CSVReader(new FileReader("inventar.csv"));
-        String[] nextLine;
-        while ((nextLine = reader.readNext()) != null) {
-            Triipkood kood = new Triipkood(nextLine[0]);
-            Tehnika ese = new Tehnika(kood, nextLine[1]);
-            koguVara.add(ese);
-        }
-        return koguVara;
-    }
+    protected static final String filepath = "C:\\Users\\priid\\OneDrive\\ati comp laenutus\\";
 
     static List<Tehnika> looInventarXLSX() throws IOException {
         List<Tehnika> koguVara = new ArrayList<>();
@@ -51,16 +39,6 @@ class Failid {
         return koguVara;
     }
 
-    static Inventar loeInventarTXT(String failinimi) throws IOException, ClassNotFoundException {
-        FileInputStream fileStream = null;
-        fileStream = new FileInputStream(failinimi);
-
-        ObjectInputStream objStream = null;
-        objStream = new ObjectInputStream(fileStream);
-
-        return (Inventar) objStream.readObject();
-
-    }
 
     static void kirjutaLaenutusCloudi(Laenutus laenutus) throws IOException {
         File fail = new File(filepath + "laenutused.xlsx");
@@ -113,18 +91,6 @@ class Failid {
         workbook.close();
         out.close();
         System.out.println("Lõpp lisatud");
-    }
-
-    static void salvestaObjektFaili(Object o) throws IOException {
-        FileOutputStream file = null;
-        file = new FileOutputStream("file.txt");
-
-        ObjectOutputStream output = null;
-
-        output = new ObjectOutputStream(file);
-
-        output.writeObject(o);
-
     }
 
     static List<Laenutus> getPraegusedLaenutused() throws IOException {

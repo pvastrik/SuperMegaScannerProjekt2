@@ -25,12 +25,6 @@ class Tehnika implements Serializable {
         return triipkood;
     }
 
-    List<Laenutus> getAjalugu() {
-        return ajalugu;
-    }
-
-    boolean kasOlemas() {return kasOlemas;}
-
     void lisaLaenutus(Laenutus laenutus) {
         ajalugu.add(laenutus);
         kasOlemas = false;

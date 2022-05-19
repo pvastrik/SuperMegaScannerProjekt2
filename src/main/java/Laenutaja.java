@@ -6,7 +6,6 @@ class Laenutaja implements Serializable {
     private String eesnimi;
     private String perenimi;
     private String isikukood;
-    private String email;
     private List<Laenutus> laenutused = new ArrayList<>();
 
     Laenutaja(String eesnimi, String perenimi, String isikukood) {
@@ -30,22 +29,6 @@ class Laenutaja implements Serializable {
 
     String getPerenimi() {
         return perenimi;
-    }
-
-    String getIsikukood() {
-        return isikukood;
-    }
-
-    String getEmail() {
-        return email;
-    }
-
-    List<Laenutus> getLaenutused() {
-        return laenutused;
-    }
-
-    void setEmail(String email) {
-        this.email = email;
     }
 
     @Override

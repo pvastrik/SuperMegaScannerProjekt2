@@ -5,8 +5,6 @@ class Triipkood implements Serializable {
     private String kood;
 
     Triipkood(String triipkood) {
-//        this.unikaalneKood = triipkood.substring(2);
-//        this.esemeKood = triipkood.substring(0,2);
         this.kood = triipkood;
     }
 

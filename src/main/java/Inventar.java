@@ -12,15 +12,6 @@ class Inventar implements Serializable {
         koguVara = Failid.looInventarXLSX();
     }
 
-    Laenutaja otsiLaenutajat(String isikukood) {
-        for (Laenutaja l : laenutajad) {
-            if (l.getIsikukood().equals(isikukood)) {
-                return l;
-            }
-        }
-        return null;
-    }
-
     Laenutus otsiLaenutust(String kood) {
         for (Laenutus l : laenutused) {
             if (Objects.equals(l.getTehnika().getTriipkood().getKood(), kood)) {
@@ -33,17 +24,6 @@ class Inventar implements Serializable {
     void setLaenutused(List<Laenutus> laenutused) {
         this.laenutused = laenutused;
     }
-
-    public List<Laenutaja> getLaenutajad() {
-        return laenutajad;
-    }
-
-    void lisaLaenutaja(Laenutaja laenutaja) {laenutajad.add(laenutaja);}
-
-
-    void lisaLaenutus(Laenutus laenutus) { laenutused.add(laenutus); }
-
-    void eemaldaLaenutus(Laenutus laenutus) { laenutused.remove(laenutus);}
 
     Tehnika getTehnika(Triipkood triipkood) {
         for (Tehnika tehnika : koguVara) {
