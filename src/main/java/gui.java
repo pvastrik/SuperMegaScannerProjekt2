@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 class gui {
     public static final JFrame frame = new JFrame("Delta inventar");
@@ -24,6 +25,9 @@ class gui {
 
     static LaenutuseHandler laenutus = new LaenutuseHandler();
 
+    private static Color tumehall = new Color(0x1B1D21);
+    private static Color kuldne = new Color(0xB69A31);
+    private static Color kiriValge = new Color(0xFDFEFD);
 
 
 
@@ -42,6 +46,8 @@ class gui {
         text.setText("scanni toode");
         text.setFont(f4);
         sonum.setFont(f3);
+        text.setForeground(kiriValge);
+        sonum.setForeground(kiriValge);
 
         //Label will be 150 (50*3) pixels wide, start at 0,0, and we'll add 30 pixels of padding below it.
         GridBagConstraints textcon = new GridBagConstraints(
@@ -61,7 +67,7 @@ class gui {
                 0, 0
         );
         GridBagConstraints buttonConstraints = new GridBagConstraints(
-                13,3,
+                14,3,
                 3,1,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
@@ -69,7 +75,7 @@ class gui {
                 0, 0
         );
         GridBagConstraints button1Constraints = new GridBagConstraints(
-                13,4,
+                14,4,
                 3,1,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
@@ -77,7 +83,7 @@ class gui {
                 0, 0
         );
         GridBagConstraints button3Constraints = new GridBagConstraints(
-                13,5,
+                14,5,
                 3,1,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
@@ -85,7 +91,7 @@ class gui {
                 0, 0
         );
         GridBagConstraints button2Constraints = new GridBagConstraints(
-                13,6,
+                14,6,
                 3,1,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
@@ -93,7 +99,7 @@ class gui {
                 0, 0
         );
         GridBagConstraints button4Constraints = new GridBagConstraints(
-                13,7,
+                14,7,
                 3,1,
                 1,1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
@@ -118,21 +124,21 @@ class gui {
         button4 = looAjaNupp("igaveseks >:)", 0);
 
 
-        button.setBackground(new Color(59, 89, 182));
-        button.setForeground(Color.WHITE);
-        button.setFont(new Font("Tahoma", Font.BOLD, 12));
-        button1.setBackground(new Color(59, 89, 182));
-        button1.setForeground(Color.WHITE);
-        button1.setFont(new Font("Tahoma", Font.BOLD, 12));
-        button2.setBackground(new Color(59, 89, 182));
-        button2.setForeground(Color.WHITE);
-        button2.setFont(new Font("Tahoma", Font.BOLD, 12));
-        button3.setBackground(new Color(59, 89, 182));
-        button3.setForeground(Color.WHITE);
-        button3.setFont(new Font("Tahoma", Font.BOLD, 12));
-        button4.setBackground(new Color(59, 89, 182));
-        button4.setForeground(Color.WHITE);
-        button4.setFont(new Font("Tahoma", Font.BOLD, 12));
+//        button.setBackground(new Color(59, 89, 182));
+//        button.setForeground(Color.WHITE);
+//        button.setFont(new Font("Tahoma", Font.BOLD, 12));
+//        button1.setBackground(new Color(59, 89, 182));
+//        button1.setForeground(Color.WHITE);
+//        button1.setFont(new Font("Tahoma", Font.BOLD, 12));
+//        button2.setBackground(new Color(59, 89, 182));
+//        button2.setForeground(Color.WHITE);
+//        button2.setFont(new Font("Tahoma", Font.BOLD, 12));
+//        button3.setBackground(new Color(59, 89, 182));
+//        button3.setForeground(Color.WHITE);
+//        button3.setFont(new Font("Tahoma", Font.BOLD, 12));
+//        button4.setBackground(new Color(59, 89, 182));
+//        button4.setForeground(Color.WHITE);
+//        button4.setFont(new Font("Tahoma", Font.BOLD, 12));
 
 
 
@@ -151,16 +157,27 @@ class gui {
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                sonum.setText("");
                 tootekood = jt.getText();
+                try {
+                    Peaklass.inventar.setLaenutused(Failid.getPraegusedLaenutused());
+                } catch (IOException ex) {
+                    sonum.setText("Laenutuste ajaloo vaatamisel tekkis viga");
+                }
                 Laenutus l = Peaklass.inventar.otsiLaenutust(tootekood);
                 if (l!= null) {
-                    eemaldaLaenutus(l);
+                    try {
+                        eemaldaLaenutus(l);
+                    } catch (Exception ex) {
+                        sonum.setText("Tagastamisel tekkis viga");
+                    }
                 } else {
                     try {
                         laenutus.setTehnika(Peaklass.inventar.getTehnika(new Triipkood(tootekood)));
                         tuvastaKasutaja();
                     } catch (Exception ex) {
                         sonum.setText("sellise koodiga toodet ei ole olemas");
+                        alge();
                     }
                 }
             }
@@ -168,7 +185,7 @@ class gui {
 
         jt.addActionListener( action );
 
-        con.setBackground(Color.lightGray);
+        con.setBackground(tumehall);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -178,11 +195,13 @@ class gui {
 
 
         jt.requestFocusInWindow();
+        jt.setText("");
     }
 
-    private static void eemaldaLaenutus(Laenutus laenutus) {
-        sonum.setText("Laenutus eemaldatud");
-        Peaklass.inventar.eemaldaLaenutus(laenutus);
+    private static void eemaldaLaenutus(Laenutus laenutus) throws IOException {
+        laenutus.getTehnika().tagasta();
+        sonum.setText("Ese tagastatud!");
+        alge();
     }
 
     private static void tuvastaKasutaja() {
@@ -194,6 +213,7 @@ class gui {
             String[] nimed = jt.getText().split(" ");
             laenutus.setLaenutaja(new Laenutaja(nimed[0], nimed[1], "123"));
             lisaNupud(jt.getText());
+            jt.setText("");
         });
     }
     private static Button semestriNupp() {
@@ -202,6 +222,9 @@ class gui {
         LocalDate kuupäev = praegu.getMonthValue() < 7 ? LocalDate.of(praegu.getYear(), 6, 30) : LocalDate.of(praegu.getYear(), 12, 20);
         Button button = new Button(String.format("semestriks (%s)", formatter.format(kuupäev)));
         lisaNupuTegevus(button, kuupäev);
+        button.setBackground(kuldne);
+        button.setForeground(Color.black);
+        button.setFont(new Font("Tahoma", Font.BOLD, 12));
         button.setVisible(false);
         return button;
     }
@@ -211,6 +234,9 @@ class gui {
         LocalDate kuupäev = kauaks == 0 ? LocalDate.MAX : LocalDate.now().plusDays(kauaks);
         Button button = kauaks == 0 ? new Button(tekst) : new Button(String.format("%s (%s)", tekst, formatter.format(kuupäev)));
         lisaNupuTegevus(button, kuupäev);
+        button.setBackground(kuldne);
+        button.setForeground(Color.black);
+        button.setFont(new Font("Tahoma", Font.BOLD, 12));
         button.setVisible(false);
         return button;
     }
@@ -221,10 +247,10 @@ class gui {
             laenutus.setLaenutaja(new Laenutaja("Priidik", "Västrik", "1234"));
             try {
                 Failid.kirjutaLaenutusCloudi(laenutus.looLaenutus());
+                lõpetaLaenutus();
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                sonum.setText("Laenutuse vormistamisel tekkis viga");
             }
-            lõpetaLaenutus();
         });
     }
 
@@ -237,6 +263,7 @@ class gui {
         button4.setVisible(false);
         alge();
         sonum.setText("laenutus edukalt registreeritud");
+        laenutus = new LaenutuseHandler();
 
 //        text.setFont(new Font("Helvetica Neue", Font.PLAIN, 20));
 

@@ -15,6 +15,11 @@ class Laenutus implements Serializable {
     private String markused;
     private int kohtFailis;
 
+    Laenutus(Laenutaja laenutaja, Tehnika tehnika) {
+        this.laenutaja = laenutaja;
+        this.tehnika = tehnika;
+    }
+
     Laenutus(Laenutaja laenutaja, Tehnika tehnika, LocalDate algus, LocalDate lopp) {
         this.laenutaja = laenutaja;
         this.tehnika = tehnika;
@@ -64,13 +69,13 @@ class Laenutus implements Serializable {
         this.markused = markused;
     }
 
-    @Override
-    public String toString() {
-        return "Laenutus{" +
-                "laenutaja=" + laenutaja +
-                ", tehnika=" + tehnika +
-                ", algus=" + algus.toString() +
-                ", lopp=" + lopp.toString() +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Laenutus{" +
+//                "laenutaja=" + laenutaja +
+//                ", tehnika=" + tehnika +
+//                ", algus=" + algus.toString() +
+//                ", lopp=" + lopp.toString() +
+//                '}';
+//    }
 }

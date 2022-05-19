@@ -1,6 +1,4 @@
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 class LaenutuseHandler {
     private Tehnika tehnika;

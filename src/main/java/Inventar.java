@@ -30,6 +30,10 @@ class Inventar implements Serializable {
         return null;
     }
 
+    void setLaenutused(List<Laenutus> laenutused) {
+        this.laenutused = laenutused;
+    }
+
     public List<Laenutaja> getLaenutajad() {
         return laenutajad;
     }

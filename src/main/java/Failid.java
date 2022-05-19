@@ -1,5 +1,6 @@
 import com.opencsv.CSVReader;
 import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -10,7 +11,7 @@ import java.util.*;
 
 class Failid {
 
-    protected static final String filepath = "C:\\Users\\mihkel\\OneDrive\\ati comp laenutus\\";
+    protected static final String filepath = "C:\\Users\\priid\\OneDrive\\ati comp laenutus\\";
 
     static List<Tehnika> looInventarCSV() throws Exception {
         List<Tehnika> koguVara = new ArrayList<>();
@@ -132,7 +133,55 @@ class Failid {
         output.writeObject(o);
 
     }
+    static List<Laenutus> getPraegusedLaenutused() throws IOException {
+        List<Laenutus> laenutused = new ArrayList<>();
+        File fail = new File(filepath + "laenutused.xlsx");
+        FileInputStream failInput = new FileInputStream(fail);
+        XSSFWorkbook wb = new XSSFWorkbook(failInput);
+        XSSFSheet leht = wb.getSheetAt(0);
+        Iterator<Row> loendur = leht.iterator();
+        Row pealkirjad = loendur.next();
 
+        while (loendur.hasNext()) {
+            Triipkood triipkood = null;
+            Laenutaja laenutaja = null;
+            boolean laenutatud = false;
+            LocalDate algus = null, lõpp = null;
+            Row rida = loendur.next();
+            Iterator<Cell> kastiLoendur = rida.cellIterator();
+            Cell laenutatudCell = rida.getCell(5);
+            if (laenutatudCell== null || laenutatudCell.getCellType() == CellType.BLANK) laenutatud = true;
+            else continue;
+            while (kastiLoendur.hasNext()) {
+                Cell kast = kastiLoendur.next();
+                switch (kast.getColumnIndex()) {
+                    case 2 ->{
+                        String[] nimed = kast.getStringCellValue().split(" ");
+                        laenutaja = new Laenutaja(nimed[0], nimed[1], "123");
+                    }
+                    case 1 -> triipkood = new Triipkood(kast.getStringCellValue());
+                    case 3 -> {
+                        String[] kuupäevad = kast.getStringCellValue().split("\\.");
+                        algus = LocalDate.of(Integer.parseInt(kuupäevad[2]), Integer.parseInt(kuupäevad[1]), Integer.parseInt(kuupäevad[0]));
+                    }
+                    case 4 -> {
+                        String[] kuupäevad = kast.getStringCellValue().split("\\.");
+                        if (kuupäevad.length == 1) lõpp = LocalDate.MAX;
+                        else lõpp = LocalDate.of(Integer.parseInt(kuupäevad[2]), Integer.parseInt(kuupäevad[1]), Integer.parseInt(kuupäevad[0]));
+                    }
+                }
+            }
+            if (laenutatud && laenutaja != null && triipkood != null) {
+                Tehnika tehnika = Peaklass.inventar.getTehnika(triipkood);
+                Laenutus laenutus = new Laenutus(laenutaja, tehnika, algus, lõpp);
+                laenutus.setKohtFailis(rida.getRowNum());
+                tehnika.lisaLaenutus(laenutus);
+                laenutused.add(laenutus);
+            }
+        }
+        return laenutused;
+
+    }
     static String formatKuupäev(Object kuupäev) {
         String[] kuupäevTükid = kuupäev.toString().split("-");
         Collections.reverse(Arrays.asList(kuupäevTükid));
