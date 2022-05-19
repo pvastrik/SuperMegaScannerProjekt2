@@ -1,6 +1,4 @@
 import com.opencsv.CSVReader;
-import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -11,7 +9,7 @@ import java.util.*;
 
 class Failid {
 
-    protected static final String filepath = "C:\\Users\\priid\\OneDrive\\ati comp laenutus\\";
+    protected static final String filepath = "C:\\Users\\mihkel\\OneDrive\\ati comp laenutus\\";
 
     static List<Tehnika> looInventarCSV() throws Exception {
         List<Tehnika> koguVara = new ArrayList<>();
@@ -51,18 +49,15 @@ class Failid {
             }
         }
         return koguVara;
-
     }
 
     static Inventar loeInventarTXT(String failinimi) throws IOException, ClassNotFoundException {
         FileInputStream fileStream = null;
         fileStream = new FileInputStream(failinimi);
 
-        // Creating an object input stream
         ObjectInputStream objStream = null;
         objStream = new ObjectInputStream(fileStream);
 
-        //Using the readObject() method
         return (Inventar) objStream.readObject();
 
     }
@@ -74,30 +69,30 @@ class Failid {
                 laenutus.getAlgus(), laenutus.getLopp()};
 
 
-            FileInputStream inputStream = new FileInputStream(fail);
-            Workbook workbook = WorkbookFactory.create(inputStream);
-            Sheet leht = workbook.getSheetAt(0);
-            int ridu = leht.getLastRowNum();
+        FileInputStream inputStream = new FileInputStream(fail);
+        Workbook workbook = WorkbookFactory.create(inputStream);
+        Sheet leht = workbook.getSheetAt(0);
+        int ridu = leht.getLastRowNum();
 
-            Row rida = leht.createRow(++ridu);
-            laenutus.setKohtFailis(ridu);
-            int tulp = 0;
-            for (Object info : laenutuseInfo) {
-                Cell kast = rida.createCell(tulp++);
-                if (info instanceof String) kast.setCellValue((String) info);
-                else if (info instanceof LocalDate) {
-                    if (info.equals(LocalDate.MAX)) kast.setCellValue("Pikemaks ajaks");
-                    else kast.setCellValue(formatKuupäev(info));
-                }
+        Row rida = leht.createRow(++ridu);
+        laenutus.setKohtFailis(ridu);
+        int tulp = 0;
+        for (Object info : laenutuseInfo) {
+            Cell kast = rida.createCell(tulp++);
+            if (info instanceof String) kast.setCellValue((String) info);
+            else if (info instanceof LocalDate) {
+                if (info.equals(LocalDate.MAX)) kast.setCellValue("Pikemaks ajaks");
+                else kast.setCellValue(formatKuupäev(info));
             }
-            inputStream.close();
+        }
+        inputStream.close();
 
 
-            FileOutputStream out = new FileOutputStream(fail);
-            workbook.write(out);
-            workbook.close();
-            out.close();
-            System.out.println("Kirjutatud");
+        FileOutputStream out = new FileOutputStream(fail);
+        workbook.write(out);
+        workbook.close();
+        out.close();
+        System.out.println("Kirjutatud");
 
     }
 
@@ -131,6 +126,7 @@ class Failid {
         output.writeObject(o);
 
     }
+
     static List<Laenutus> getPraegusedLaenutused() throws IOException {
         List<Laenutus> laenutused = new ArrayList<>();
         File fail = new File(filepath + "laenutused.xlsx");
@@ -148,12 +144,12 @@ class Failid {
             Row rida = loendur.next();
             Iterator<Cell> kastiLoendur = rida.cellIterator();
             Cell laenutatudCell = rida.getCell(5);
-            if (laenutatudCell== null || laenutatudCell.getCellType() == CellType.BLANK) laenutatud = true;
+            if (laenutatudCell == null || laenutatudCell.getCellType() == CellType.BLANK) laenutatud = true;
             else continue;
             while (kastiLoendur.hasNext()) {
                 Cell kast = kastiLoendur.next();
                 switch (kast.getColumnIndex()) {
-                    case 2 ->{
+                    case 2 -> {
                         String[] nimed = kast.getStringCellValue().split(" ");
                         laenutaja = new Laenutaja(nimed[0], nimed[1], "123");
                     }
@@ -165,7 +161,8 @@ class Failid {
                     case 4 -> {
                         String[] kuupäevad = kast.getStringCellValue().split("\\.");
                         if (kuupäevad.length == 1) lõpp = LocalDate.MAX;
-                        else lõpp = LocalDate.of(Integer.parseInt(kuupäevad[2]), Integer.parseInt(kuupäevad[1]), Integer.parseInt(kuupäevad[0]));
+                        else
+                            lõpp = LocalDate.of(Integer.parseInt(kuupäevad[2]), Integer.parseInt(kuupäevad[1]), Integer.parseInt(kuupäevad[0]));
                     }
                 }
             }
@@ -180,6 +177,7 @@ class Failid {
         return laenutused;
 
     }
+
     static String formatKuupäev(Object kuupäev) {
         String[] kuupäevTükid = kuupäev.toString().split("-");
         Collections.reverse(Arrays.asList(kuupäevTükid));

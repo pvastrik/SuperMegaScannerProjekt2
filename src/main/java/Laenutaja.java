@@ -15,6 +15,11 @@ class Laenutaja implements Serializable {
         this.isikukood = isikukood;
     }
 
+    public Laenutaja(String eesnimi, String perenimi) {
+        this.eesnimi = eesnimi;
+        this.perenimi = perenimi;
+    }
+
     void lisaLaenutus(Laenutus laenutus) {
         laenutused.add(laenutus);
     }
