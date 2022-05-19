@@ -19,8 +19,8 @@ class Peaklass {
     }
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
-        gui.alge();
 
+        gui.alge();
         Scanner triipkoodiLugeja = new Scanner(System.in);
         while (true) {
             //kontrolliTehnikaAjalugu(triipkoodiLugeja, inventar);

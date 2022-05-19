@@ -29,6 +29,36 @@ class gui {
     private static Color kuldne = new Color(0xB69A31);
     private static Color kiriValge = new Color(0xFDFEFD);
 
+    private static Action koodiTegevus = new AbstractAction()
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            sonum.setText("");
+            tootekood = jt.getText();
+            try {
+                Peaklass.inventar.setLaenutused(Failid.getPraegusedLaenutused());
+            } catch (IOException ex) {
+                sonum.setText("Laenutuste ajaloo vaatamisel tekkis viga");
+            }
+            Laenutus l = Peaklass.inventar.otsiLaenutust(tootekood);
+            if (l!= null) {
+                try {
+                    eemaldaLaenutus(l);
+                } catch (Exception ex) {
+                    sonum.setText("Tagastamisel tekkis viga");
+                }
+            } else {
+                try {
+                    laenutus.setTehnika(Peaklass.inventar.getTehnika(new Triipkood(tootekood)));
+                    tuvastaKasutaja();
+                } catch (Exception ex) {
+                    sonum.setText("sellise koodiga toodet ei ole olemas");
+                    alguseStseen();
+                }
+            }
+        }
+    };
 
 
 
@@ -43,7 +73,7 @@ class gui {
         Arrays.fill(layout.columnWidths, 50);
         layout.rowHeights = new int[15];
         Arrays.fill(layout.rowHeights, 50);
-        text.setText("scanni toode");
+        text.setText("Skänni toode");
         text.setFont(f4);
         sonum.setFont(f3);
         text.setForeground(kiriValge);
@@ -152,38 +182,8 @@ class gui {
         con.add(sonum, sonumcon);
 
 
-        Action action = new AbstractAction()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                sonum.setText("");
-                tootekood = jt.getText();
-                try {
-                    Peaklass.inventar.setLaenutused(Failid.getPraegusedLaenutused());
-                } catch (IOException ex) {
-                    sonum.setText("Laenutuste ajaloo vaatamisel tekkis viga");
-                }
-                Laenutus l = Peaklass.inventar.otsiLaenutust(tootekood);
-                if (l!= null) {
-                    try {
-                        eemaldaLaenutus(l);
-                    } catch (Exception ex) {
-                        sonum.setText("Tagastamisel tekkis viga");
-                    }
-                } else {
-                    try {
-                        laenutus.setTehnika(Peaklass.inventar.getTehnika(new Triipkood(tootekood)));
-                        tuvastaKasutaja();
-                    } catch (Exception ex) {
-                        sonum.setText("sellise koodiga toodet ei ole olemas");
-                        alge();
-                    }
-                }
-            }
-        };
 
-        jt.addActionListener( action );
+        jt.addActionListener( koodiTegevus );
 
         con.setBackground(tumehall);
 
@@ -197,13 +197,27 @@ class gui {
         jt.requestFocusInWindow();
         jt.setText("");
     }
+    private static void alguseStseen() {
+        text.setText("Skänni toode");
+        jt.setText("");
+        peidaNupud();
+        jt.removeActionListener(jt.getActionListeners()[0]);
+        jt.addActionListener(koodiTegevus);
 
+    }
     private static void eemaldaLaenutus(Laenutus laenutus) throws IOException {
         laenutus.getTehnika().tagasta();
         sonum.setText("Ese tagastatud!");
-        alge();
+        alguseStseen();
     }
 
+    private static void peidaNupud() {
+        button.setVisible(false);
+        button1.setVisible(false);
+        button2.setVisible(false);
+        button3.setVisible(false);
+        button4.setVisible(false);
+    }
     private static void tuvastaKasutaja() {
 
         text.setText("Valideeri kaart");
@@ -211,7 +225,7 @@ class gui {
         jt.removeActionListener(jt.getActionListeners()[0]);
         jt.addActionListener(e -> {
             String[] nimed = jt.getText().split(" ");
-            laenutus.setLaenutaja(new Laenutaja(nimed[0], nimed[1], "123"));
+            laenutus.setLaenutaja(new Laenutaja(nimed[0], nimed[1], nimed[2]));
             lisaNupud(jt.getText());
             jt.setText("");
         });
@@ -261,9 +275,9 @@ class gui {
         button2.setVisible(false);
         button3.setVisible(false);
         button4.setVisible(false);
-        alge();
         sonum.setText("laenutus edukalt registreeritud");
         laenutus = new LaenutuseHandler();
+        alguseStseen();
 
 //        text.setFont(new Font("Helvetica Neue", Font.PLAIN, 20));
 

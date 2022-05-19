@@ -73,7 +73,7 @@ class Failid {
         Object[] laenutuseInfo = {laenutus.getTehnika().getKirjeldus(), laenutus.getTehnika().getTriipkood().toString(), laenutus.getLaenutaja().getEesnimi() + " " + laenutus.getLaenutaja().getPerenimi(),
                 laenutus.getAlgus(), laenutus.getLopp()};
 
-        try {
+
             FileInputStream inputStream = new FileInputStream(fail);
             Workbook workbook = WorkbookFactory.create(inputStream);
             Sheet leht = workbook.getSheetAt(0);
@@ -98,9 +98,7 @@ class Failid {
             workbook.close();
             out.close();
             System.out.println("Kirjutatud");
-        } catch (IOException | EncryptedDocumentException e) {
-            e.printStackTrace();
-        }
+
     }
 
     static void lisaTagastamineCloudi(Laenutus laenutus) throws IOException {
